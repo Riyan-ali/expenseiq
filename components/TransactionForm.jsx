@@ -13,6 +13,7 @@ const schema = z.object({
   description: z.string().optional(),
   categoryId: z.string().min(1, "Category is required"),
   date: z.string().min(1, "Date is required"),
+  priority: z.enum(["high", "medium", "low"]).optional(),
 });
 
 export default function TransactionForm({ onSubmit, existingData, isEdit }) {
@@ -49,7 +50,6 @@ export default function TransactionForm({ onSubmit, existingData, isEdit }) {
   }, [existingData, reset]);
 
   const onFormSubmit = async (data) => {
-    console.log("Form Data:", data);
     const payload = { ...data, type: selectedType };
 
     Object.keys(payload).forEach((key) => {
