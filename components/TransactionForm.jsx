@@ -43,6 +43,9 @@ export default function TransactionForm({ onSubmit, existingData, isEdit }) {
       reset({
         ...existingData,
         categoryId: existingData.categoryId._id || "",
+        date: existingData.date
+          ? new Date(existingData.date).toISOString().split("T")[0]
+          : "",
       });
       setSelectedType(existingData.type);
       setSelectedCategory(existingData.categoryId._id || "");
