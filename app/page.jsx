@@ -2,19 +2,25 @@
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useQuery } from "@tanstack/react-query";
 import api from "../lib/api";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function Dashboard() {
+  const [dateRange, setDateRange] = useState({ from: "", to: "" });
   const now = new Date();
-  const [dateRange, setDateRange] = useState({
-    from: new Date(now.getFullYear(), now.getMonth(), 1)
-      .toISOString()
-      .split("T")[0],
-    to: new Date(now.getFullYear(), now.getMonth() + 1, 0)
-      .toISOString()
-      .split("T")[0],
-  });
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    const from = formatDate(new Date(now.getFullYear(), now.getMonth(), 1));
+    const to = formatDate(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+    setDateRange({ from, to });
+  }, []);
 
   const { data: summary, isLoading } = useQuery({
     queryKey: ["summary", dateRange],
@@ -28,11 +34,42 @@ export default function Dashboard() {
   const expense = summary?.totals?.find((t) => t._id === "expense")?.total || 0;
   const balance = income - expense;
 
+  const handleDateChange = (key, value) => {
+    setDateRange((prev) => ({ ...prev, [key]: value }));
+  };
+
   return (
     <ProtectedRoute>
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
 
+        {/* Date Range Filter */}
+        <div className="bg-white p-4 rounded-lg shadow mb-6 flex flex-wrap gap-4 items-end">
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              From
+            </label>
+            <input
+              type="date"
+              value={dateRange.from}
+              onChange={(e) => handleDateChange("from", e.target.value)}
+              className="p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold text-gray-700 mb-1">
+              To
+            </label>
+            <input
+              type="date"
+              value={dateRange.to}
+              onChange={(e) => handleDateChange("to", e.target.value)}
+              className="p-2 border rounded focus:ring-2 focus:ring-blue-400 outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Summary */}
         {isLoading ? (
           <p>Loading summary...</p>
         ) : (
@@ -52,6 +89,7 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Quick Links */}
         <h2 className="text-xl font-semibold mb-4">Quick Navigation</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <DashboardCard

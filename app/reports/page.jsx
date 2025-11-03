@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import api from "../../lib/api";
 import Chart from "../../components/Chart";
 
 export default function Reports() {
+  const router = useRouter();
   const [range, setRange] = useState({ from: "", to: "" });
   const now = new Date();
 
@@ -42,7 +44,15 @@ export default function Reports() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Reports Summary</h1>
+      <div className="flex items-center gap-3 mb-6">
+        <button
+          onClick={() => router.back()}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1 rounded-md transition-colors"
+        >
+          Back
+        </button>
+        <h1 className="text-3xl font-bold">Reports Summary</h1>
+      </div>
 
       <div className="flex flex-wrap items-center gap-2 mb-6">
         <input

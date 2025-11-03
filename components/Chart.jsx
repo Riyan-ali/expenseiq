@@ -30,7 +30,7 @@ export default function Chart({ data, type = "line", byCategory = [] }) {
     }));
 
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
             data={formattedData}
@@ -75,7 +75,7 @@ export default function Chart({ data, type = "line", byCategory = [] }) {
   const processedData = Object.values(grouped);
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={400}>
       <LineChart data={processedData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />

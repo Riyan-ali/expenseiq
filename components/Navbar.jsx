@@ -1,6 +1,7 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "../components/AuthContext";
+import Image from "next/image";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
@@ -21,7 +22,13 @@ export default function Navbar() {
           className="text-2xl font-bold text-blue-600 cursor-pointer"
           onClick={() => router.push("/")}
         >
-          ExpenseIQ
+          <Image
+            src="/images/logo.png"
+            alt="Logo"
+            width={130}
+            height={30}
+            className="inline-block mr-2"
+          />
         </h1>
 
         <div className="flex items-center gap-3">
